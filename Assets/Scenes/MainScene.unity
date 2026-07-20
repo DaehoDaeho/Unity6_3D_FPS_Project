@@ -692,9 +692,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 455c7fa2e49c95c448fa2168ea9fd30e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  characterController: {fileID: 0}
-  cameraPivot: {fileID: 0}
-  playerCamera: {fileID: 0}
+  characterController: {fileID: 688643031}
+  cameraPivot: {fileID: 515088991}
+  playerCamera: {fileID: 330585545}
 --- !u!143 &688643031
 CharacterController:
   m_ObjectHideFlags: 0
