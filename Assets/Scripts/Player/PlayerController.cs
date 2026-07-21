@@ -6,6 +6,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Transform cameraPivot;
     [SerializeField] private Camera playerCamera;
 
+    [SerializeField] private float moveSpeed = 5.0f;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -20,7 +22,7 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        MovePlayer();
     }
 
     void CheckRequiredReferences()
@@ -39,5 +41,19 @@ public class PlayerController : MonoBehaviour
         {
             Debug.LogWarning("PlayerCamera가 연결되지 않았습니다.", this);
         }
+    }
+
+    void MovePlayer()
+    {
+        float horizontalInput = Input.GetAxisRaw("Horizontal");
+        float verticalInput = Input.GetAxisRaw("Vertical");
+
+        Vector3 moveDirection = (transform.forward * verticalInput) + (transform.right * horizontalInput);
+
+        moveDirection.Normalize();
+
+        Vector3 movement = moveDirection * moveSpeed * Time.deltaTime;
+
+        characterController.Move(movement);
     }
 }

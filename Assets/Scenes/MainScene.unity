@@ -695,6 +695,7 @@ MonoBehaviour:
   characterController: {fileID: 688643031}
   cameraPivot: {fileID: 515088991}
   playerCamera: {fileID: 330585545}
+  moveSpeed: 5
 --- !u!143 &688643031
 CharacterController:
   m_ObjectHideFlags: 0
