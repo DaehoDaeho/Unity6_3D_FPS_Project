@@ -696,6 +696,9 @@ MonoBehaviour:
   cameraPivot: {fileID: 515088991}
   playerCamera: {fileID: 330585545}
   moveSpeed: 5
+  mouseSensitivity: 2
+  minVerticalAngle: -80
+  maxVerticalAngle: 80
 --- !u!143 &688643031
 CharacterController:
   m_ObjectHideFlags: 0

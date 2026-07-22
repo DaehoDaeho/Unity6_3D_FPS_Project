@@ -8,6 +8,12 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField] private float moveSpeed = 5.0f;
 
+    [SerializeField] private float mouseSensitivity = 2.0f;
+    [SerializeField] private float minVerticalAngle = -80.0f;
+    [SerializeField] private float maxVerticalAngle = 80.0f;
+
+    private float verticalRotation;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -17,12 +23,21 @@ public class PlayerController : MonoBehaviour
         }
 
         CheckRequiredReferences();
+
+        ConfigureCursor();
+    }
+
+    void ConfigureCursor()
+    {
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 
     // Update is called once per frame
     void Update()
     {
         MovePlayer();
+        LookAround();
     }
 
     void CheckRequiredReferences()
@@ -55,5 +70,23 @@ public class PlayerController : MonoBehaviour
         Vector3 movement = moveDirection * moveSpeed * Time.deltaTime;
 
         characterController.Move(movement);
+    }
+
+    void LookAround()
+    {
+        float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity;
+        float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity;
+
+        transform.Rotate(Vector3.up * mouseX);
+
+        verticalRotation -= mouseY;
+        verticalRotation = Mathf.Clamp(verticalRotation, minVerticalAngle, maxVerticalAngle);
+
+        if(cameraPivot == null)
+        {
+            return;
+        }
+
+        cameraPivot.localRotation = Quaternion.Euler(verticalRotation, 0.0f, 0.0f);
     }
 }
