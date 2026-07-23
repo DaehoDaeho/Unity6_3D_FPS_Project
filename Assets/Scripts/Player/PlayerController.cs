@@ -12,7 +12,11 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float minVerticalAngle = -80.0f;
     [SerializeField] private float maxVerticalAngle = 80.0f;
 
+    [SerializeField] private float gravity = -20.0f;
+    [SerializeField] private float jumpHeight = 1.5f;
+
     private float verticalRotation;
+    private float verticalVelocity;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -67,7 +71,23 @@ public class PlayerController : MonoBehaviour
 
         moveDirection.Normalize();
 
-        Vector3 movement = moveDirection * moveSpeed * Time.deltaTime;
+        Vector3 horizontalMovement = moveDirection * moveSpeed;
+
+        if(characterController.isGrounded == true && verticalVelocity < 0.0f)
+        {
+            verticalVelocity = -2.0f;
+        }
+
+        if(characterController.isGrounded == true && Input.GetKeyDown(KeyCode.Space) == true)
+        {
+            verticalVelocity = Mathf.Sqrt(jumpHeight * -2.0f * gravity);
+        }
+
+        verticalVelocity += gravity * Time.deltaTime;
+
+        Vector3 verticalMovement = Vector3.up * verticalVelocity;
+
+        Vector3 movement = (horizontalMovement + verticalMovement) * Time.deltaTime;
 
         characterController.Move(movement);
     }
