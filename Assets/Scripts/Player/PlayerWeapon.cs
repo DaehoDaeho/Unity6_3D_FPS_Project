@@ -12,6 +12,16 @@ public class PlayerWeapon : MonoBehaviour
 
     [SerializeField] private int damage = 10;
 
+    [SerializeField] private ParticleSystem[] muzzleFlash;
+    [SerializeField] private GameObject hitEffectPrefab;
+
+    [SerializeField] private AudioSource weaponAudioSource;
+
+    [SerializeField] private AudioClip fireSound;
+    [SerializeField] private AudioClip hitSound;
+
+    [SerializeField] private float hitEffectDestroyTime = 1.5f;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -48,6 +58,8 @@ public class PlayerWeapon : MonoBehaviour
             return;
         }
 
+        PlayFireFeedback();
+
         Vector3 rayStartPosition = playerCamera.transform.position;
         Vector3 rayDirection = playerCamera.transform.forward;
 
@@ -59,6 +71,8 @@ public class PlayerWeapon : MonoBehaviour
         {
             Debug.Log(hitInfo.collider.name + " / " + hitInfo.distance);
             Debug.Log("Hit Point: " + hitInfo.point);
+
+            PlayHitFeedback(hitInfo);
 
             EnemyHealth enemyHealth = hitInfo.collider.GetComponent<EnemyHealth>();
             if(enemyHealth != null)
@@ -73,6 +87,40 @@ public class PlayerWeapon : MonoBehaviour
         else
         {
             Debug.Log("빗나감");
+        }
+    }
+
+    void PlayFireFeedback()
+    {
+        if(muzzleFlash != null)
+        {
+            foreach (ParticleSystem particle in muzzleFlash)
+            {
+                if(particle != null)
+                {
+                    particle.Play();
+                }
+            }
+        }
+
+        if (weaponAudioSource != null && fireSound != null)
+        {
+            weaponAudioSource.PlayOneShot(fireSound);
+        }
+    }
+
+    void PlayHitFeedback(RaycastHit hitInfo)
+    {
+        if(hitEffectPrefab != null)
+        {
+            GameObject hitEffect = Instantiate(hitEffectPrefab, hitInfo.point, Quaternion.identity);
+
+            Destroy(hitEffect, hitEffectDestroyTime);
+        }
+
+        if (weaponAudioSource != null && hitSound != null)
+        {
+            weaponAudioSource.PlayOneShot(hitSound);
         }
     }
 }
