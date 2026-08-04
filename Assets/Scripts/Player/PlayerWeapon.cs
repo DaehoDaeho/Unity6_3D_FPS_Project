@@ -22,6 +22,15 @@ public class PlayerWeapon : MonoBehaviour
 
     [SerializeField] private float hitEffectDestroyTime = 1.5f;
 
+    [SerializeField] private int magazineSize = 12;
+    [SerializeField] private int currentAmmo = 12;
+    [SerializeField] private int reserveAmmo = 36;
+    [SerializeField] private float reloadTime = 1.5f;
+
+    private bool isReloading;
+    private float reloadTimer;
+
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -33,6 +42,8 @@ public class PlayerWeapon : MonoBehaviour
     void Update()
     {
         HandleFireInput();
+        HandleReloadInput();
+        UpdateReload();
     }
 
     private void CheckRequiredReferences()
@@ -51,12 +62,59 @@ public class PlayerWeapon : MonoBehaviour
         }
     }
 
-    void Fire()
+    private void HandleReloadInput()
     {
-        if(playerCamera == null)
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            TryBeginReload();
+        }
+    }
+
+    private void UpdateReload()
+    {
+        if (isReloading == false)
         {
             return;
         }
+
+        reloadTimer -= Time.deltaTime;
+
+        if (reloadTimer <= 0f)
+        {
+            FinishReload();
+        }
+    }
+
+    private bool CanFire()
+    {
+        if (playerCamera == null)
+        {
+            return false;
+        }
+
+        if (isReloading == true)
+        {
+            return false;
+        }
+
+        return currentAmmo > 0;
+    }
+
+    void Fire()
+    {
+        if (CanFire() == false)
+        {
+            Debug.Log("Cannot fire.", this);
+            return;
+        }
+
+        if (playerCamera == null)
+        {
+            return;
+        }
+
+        currentAmmo--;
+        Debug.Log($"Ammo: {currentAmmo} / {reserveAmmo}", this);
 
         PlayFireFeedback();
 
@@ -122,5 +180,47 @@ public class PlayerWeapon : MonoBehaviour
         {
             weaponAudioSource.PlayOneShot(hitSound);
         }
+    }
+
+    private void TryBeginReload()
+    {
+        if (isReloading == true)
+        {
+            return;
+        }
+
+        if (currentAmmo >= magazineSize)
+        {
+            return;
+        }
+
+        if (reserveAmmo <= 0)
+        {
+            return;
+        }
+
+        BeginReload();
+    }
+
+    private void BeginReload()
+    {
+        isReloading = true;
+        reloadTimer = reloadTime;
+
+        Debug.Log("Reload started.", this);
+    }
+
+    private void FinishReload()
+    {
+        int neededAmmo = magazineSize - currentAmmo;
+        int ammoToLoad = Mathf.Min(neededAmmo, reserveAmmo);
+
+        currentAmmo += ammoToLoad;
+        reserveAmmo -= ammoToLoad;
+
+        isReloading = false;
+        reloadTimer = 0f;
+
+        Debug.Log($"Reload finished. Ammo: {currentAmmo} / {reserveAmmo}", this);
     }
 }
