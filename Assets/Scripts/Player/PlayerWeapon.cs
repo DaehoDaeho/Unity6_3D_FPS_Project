@@ -1,4 +1,5 @@
 using UnityEngine;
+using TMPro;
 
 public class PlayerWeapon : MonoBehaviour
 {
@@ -27,6 +28,9 @@ public class PlayerWeapon : MonoBehaviour
     [SerializeField] private int reserveAmmo = 36;
     [SerializeField] private float reloadTime = 1.5f;
 
+    [SerializeField] private TMP_Text ammoText;
+    [SerializeField] private TMP_Text reloadText;
+
     private bool isReloading;
     private float reloadTimer;
 
@@ -36,6 +40,9 @@ public class PlayerWeapon : MonoBehaviour
     {
         CheckRequiredReferences();
         Debug.Log(weaponName + " is ready.");
+
+        UpdateAmmoText();
+        UpdateReloadText();
     }
 
     // Update is called once per frame
@@ -78,6 +85,7 @@ public class PlayerWeapon : MonoBehaviour
         }
 
         reloadTimer -= Time.deltaTime;
+        UpdateReloadText();
 
         if (reloadTimer <= 0f)
         {
@@ -115,6 +123,7 @@ public class PlayerWeapon : MonoBehaviour
 
         currentAmmo--;
         Debug.Log($"Ammo: {currentAmmo} / {reserveAmmo}", this);
+        UpdateAmmoText();
 
         PlayFireFeedback();
 
@@ -207,6 +216,7 @@ public class PlayerWeapon : MonoBehaviour
         isReloading = true;
         reloadTimer = reloadTime;
 
+        UpdateReloadText();
         Debug.Log("Reload started.", this);
     }
 
@@ -221,6 +231,36 @@ public class PlayerWeapon : MonoBehaviour
         isReloading = false;
         reloadTimer = 0f;
 
+        UpdateAmmoText();
+        UpdateReloadText();
+
         Debug.Log($"Reload finished. Ammo: {currentAmmo} / {reserveAmmo}", this);
+    }
+
+    void UpdateAmmoText()
+    {
+        if(ammoText == null)
+        {
+            return;
+        }
+
+        ammoText.text = $"{currentAmmo} / {reserveAmmo}";
+    }
+
+    void UpdateReloadText()
+    {
+        if(reloadText == null)
+        {
+            return;
+        }
+
+        if(isReloading == true)
+        {
+            reloadText.text = $"RELOADING {reloadTimer:0.0}s";
+        }
+        else
+        {
+            reloadText.text = string.Empty;
+        }
     }
 }
