@@ -11,8 +11,13 @@ public class EnemyChaseAgent : MonoBehaviour
     [SerializeField] private NavMeshAgent agent;
     [SerializeField] private Animator animator;
 
+    [SerializeField] private float attackDistance = 2.4f;
+    [SerializeField] private int attackDamage = 10;
+    [SerializeField] private float attackCooldown = 1.2f;
+
     private float updateTimer;
     private bool isStopped = true;
+    private float lastAttackTime = 0.0f;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -47,9 +52,10 @@ public class EnemyChaseAgent : MonoBehaviour
 
         float distanceToTarget = Vector3.Distance(transform.position, target.position);
 
-        if(distanceToTarget <= stopDistance)
+        if(distanceToTarget <= attackDistance)
         {
-            StopAgent();
+            StopForAttack();
+            TryAttack();
         }
         else if(distanceToTarget <= chaseDistance)
         {
@@ -80,6 +86,33 @@ public class EnemyChaseAgent : MonoBehaviour
         agent.isStopped = true;
         isStopped = agent.isStopped;
         agent.ResetPath();
+    }
+
+    void StopForAttack()
+    {
+        agent.isStopped = true;
+        isStopped = agent.isStopped;
+    }
+
+    void TryAttack()
+    {
+        if(targetHealth == null)
+        {
+            return;
+        }
+
+        if(Time.time < lastAttackTime + attackCooldown)
+        {
+            return;
+        }
+
+        lastAttackTime = Time.time;
+        animator.SetTrigger("IsAttacking");
+    }
+
+    public void OnAttackEvent()
+    {
+        targetHealth.TakeDamage(attackDamage);
     }
 
     void UpdateAnimation()
