@@ -1097,6 +1097,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 100
+  agent: {fileID: 1941267812027058536}
 --- !u!95 &2137967180379381679
 Animator:
   serializedVersion: 7
@@ -1160,6 +1161,9 @@ MonoBehaviour:
   updateInterval: 0.15
   agent: {fileID: 1183663282332463982}
   animator: {fileID: 2137967180379381679}
+  attackDistance: 2.4
+  attackDamage: 10
+  attackCooldown: 1.2
 --- !u!1 &4523139366846529165
 GameObject:
   m_ObjectHideFlags: 0

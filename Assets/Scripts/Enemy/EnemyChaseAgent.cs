@@ -3,6 +3,14 @@ using UnityEngine.AI;
 
 public class EnemyChaseAgent : MonoBehaviour
 {
+    public enum EnemyState
+    {
+        Idle,
+        Chase,
+        Attack,
+        Dead
+    }
+
     [SerializeField] private Transform target;
     [SerializeField] private PlayerHealth targetHealth;
     [SerializeField] private float chaseDistance = 12.0f;
@@ -19,6 +27,8 @@ public class EnemyChaseAgent : MonoBehaviour
     private bool isStopped = true;
     private float lastAttackTime = 0.0f;
 
+    private EnemyState currentState = EnemyState.Idle;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -33,40 +43,112 @@ public class EnemyChaseAgent : MonoBehaviour
     {
         if(agent == null || target == null)
         {
+            ChangeState(EnemyState.Idle);
+            RunCurrentState();
             return;
         }
 
         if (targetHealth != null && targetHealth.IsDead == true)
         {
-            StopAgent();
+            ChangeState(EnemyState.Idle);
+            RunCurrentState();
             return;
         }
 
         updateTimer -= Time.deltaTime;
-        if(updateTimer > 0.0f)
+        if(updateTimer <= 0.0f)
+        {
+            updateTimer = updateInterval;
+            float distanceToTarget = Vector3.Distance(transform.position, target.position);
+
+            DecideState(distanceToTarget);
+        }
+
+        RunCurrentState();
+
+        UpdateAnimation();
+    }
+
+    void DecideState(float distanceToTarget)
+    {
+        if(distanceToTarget <= attackDistance)
+        {
+            // 공격 상태로 전환.
+            ChangeState(EnemyState.Attack);
+        }
+        else if(distanceToTarget <= chaseDistance)
+        {
+            // 추적 상태로 전환.
+            ChangeState(EnemyState.Chase);
+        }
+        else
+        {
+            // 대기 상태로 전환.
+            ChangeState(EnemyState.Idle);
+        }
+    }
+
+    public void ChangeState(EnemyState nextState)
+    {
+        if(currentState == nextState)
         {
             return;
         }
 
-        updateTimer = updateInterval;
+        currentState = nextState;
+        Debug.Log("Enemy State: " + currentState);
+    }
 
-        float distanceToTarget = Vector3.Distance(transform.position, target.position);
+    void RunCurrentState()
+    {
+        // switch ~ case 문.
+        switch(currentState)
+        {
+            case EnemyState.Idle:
+                {
+                    RunIdleState();
+                }
+                break;
 
-        if(distanceToTarget <= attackDistance)
-        {
-            StopForAttack();
-            TryAttack();
-        }
-        else if(distanceToTarget <= chaseDistance)
-        {
-            ChaseTarget();
-        }
-        else
-        {
-            StopAgent();
-        }
+            case EnemyState.Chase:
+                {
+                    RunChaseState();
+                }
+                break;
 
-        UpdateAnimation();
+            case EnemyState.Attack:
+                {
+                    RunAttackState();
+                }
+                break;
+
+            case EnemyState.Dead:
+                {
+                    RunDeadState();
+                }
+                break;
+        }
+    }
+
+    void RunIdleState()
+    {
+        StopAgent();
+    }
+
+    void RunChaseState()
+    {
+        ChaseTarget();
+    }
+
+    void RunAttackState()
+    {
+        StopForAttack();
+        TryAttack();
+    }
+
+    void RunDeadState()
+    {
+        StopAgent();
     }
 
     void ChaseTarget()
