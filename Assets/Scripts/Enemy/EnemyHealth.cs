@@ -53,6 +53,6 @@ public class EnemyHealth : MonoBehaviour
             agent.ChangeState(EnemyChaseAgent.EnemyState.Dead);
         }
 
-        gameObject.SetActive(false);
+        //gameObject.SetActive(false);
     }
 }

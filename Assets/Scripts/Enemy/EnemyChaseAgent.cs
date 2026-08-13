@@ -1,3 +1,5 @@
+using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -23,9 +25,12 @@ public class EnemyChaseAgent : MonoBehaviour
     [SerializeField] private int attackDamage = 10;
     [SerializeField] private float attackCooldown = 1.2f;
 
+    [SerializeField] private Collider attackHitCollider;
+
     private float updateTimer;
     private bool isStopped = true;
     private float lastAttackTime = 0.0f;
+    private bool isDead = false;
 
     private EnemyState currentState = EnemyState.Idle;
 
@@ -35,6 +40,11 @@ public class EnemyChaseAgent : MonoBehaviour
         if(agent != null)
         {
             agent.stoppingDistance = stopDistance;
+        }
+
+        if(attackHitCollider != null)
+        {
+            attackHitCollider.enabled = false;
         }
     }
 
@@ -64,8 +74,7 @@ public class EnemyChaseAgent : MonoBehaviour
             DecideState(distanceToTarget);
         }
 
-        RunCurrentState();
-
+        RunCurrentState();        
         UpdateAnimation();
     }
 
@@ -148,14 +157,23 @@ public class EnemyChaseAgent : MonoBehaviour
 
     void RunDeadState()
     {
+        if(isDead == true)
+        {
+            return;
+        }
+
+        isDead = true;
+
         StopAgent();
+
+        PlayDeadAnimation();
     }
 
     void ChaseTarget()
     {
         agent.isStopped = false;
         isStopped = agent.isStopped;
-        agent.SetDestination(target.position);
+        agent.SetDestination(target.position);        
     }
 
     void StopAgent()
@@ -189,10 +207,34 @@ public class EnemyChaseAgent : MonoBehaviour
         }
 
         lastAttackTime = Time.time;
-        animator.SetTrigger("IsAttacking");
+        RotateTotarget();
+    }
+
+    void RotateTotarget()
+    {
+        Vector3 direction = (target.position - transform.position).normalized;
+        Quaternion rotation = Quaternion.LookRotation(direction);
+        transform.rotation = Quaternion.Slerp(transform.rotation, rotation, 120.0f * Time.deltaTime);
     }
 
     public void OnAttackEvent()
+    {
+        //targetHealth.TakeDamage(attackDamage);
+        if(attackHitCollider != null)
+        {
+            attackHitCollider.enabled = true;
+        }
+    }
+
+    public void OnAttackEndEvent()
+    {
+        if (attackHitCollider != null)
+        {
+            attackHitCollider.enabled = false;
+        }
+    }
+
+    public void TakeDamage()
     {
         targetHealth.TakeDamage(attackDamage);
     }
@@ -204,7 +246,27 @@ public class EnemyChaseAgent : MonoBehaviour
             return;
         }
 
-        animator.SetBool("IsChasing", !isStopped);
+        animator.SetBool("IsChasing", currentState == EnemyState.Chase);
+        animator.SetBool("IsAttacking", currentState == EnemyState.Attack);
+    }
+
+    void PlayDeadAnimation()
+    {
+        if(animator == null)
+        {
+            return;
+        }
+
+        animator.SetTrigger("IsDead");
+
+        StartCoroutine(DisableEnemy());
+    }
+
+    IEnumerator DisableEnemy()
+    {
+        yield return new WaitForSeconds(3.0f);
+
+        gameObject.SetActive(false);
     }
 
     public void OnFootstep()
