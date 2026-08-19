@@ -213,8 +213,7 @@ public class EnemyChaseAgent : MonoBehaviour
     void RotateTotarget()
     {
         Vector3 direction = (target.position - transform.position).normalized;
-        Quaternion rotation = Quaternion.LookRotation(direction);
-        transform.rotation = Quaternion.Slerp(transform.rotation, rotation, 120.0f * Time.deltaTime);
+        transform.rotation = Quaternion.LookRotation(direction);
     }
 
     public void OnAttackEvent()
