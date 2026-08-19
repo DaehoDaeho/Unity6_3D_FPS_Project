@@ -8,6 +8,11 @@ public class EnemyHealth : MonoBehaviour
     private int currentHealth = 0;
     private bool isDead;
 
+    public bool IsDead
+    {
+        get { return isDead; }
+    }
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {

@@ -268,6 +268,12 @@ public class EnemyChaseAgent : MonoBehaviour
         gameObject.SetActive(false);
     }
 
+    public void SetTarget(Transform newTarget, PlayerHealth newTargetHealth)
+    {
+        target = newTarget;
+        targetHealth = newTargetHealth;
+    }
+
     public void OnFootstep()
     {
 
