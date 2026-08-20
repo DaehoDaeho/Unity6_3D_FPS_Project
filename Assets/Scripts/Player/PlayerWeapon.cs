@@ -263,4 +263,10 @@ public class PlayerWeapon : MonoBehaviour
             reloadText.text = string.Empty;
         }
     }
+
+    public void AddReserveAmmo(int ammoAmount)
+    {
+        reserveAmmo += ammoAmount;
+        UpdateAmmoText();
+    }
 }
