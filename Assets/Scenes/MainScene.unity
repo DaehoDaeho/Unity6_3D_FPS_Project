@@ -436,44 +436,73 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaponSlots:
   - displayName: Pistol
+    hitType: 0
     weaponObject: {fileID: 1400087325}
+    projectilePrefab: {fileID: 0}
+    projectileSpeed: 5
+    projectileExplosionRadius: 0
     damage: 10
     fireDistance: 100
     magazineSize: 12
     currentAmmo: 12
     reserveAmmo: 36
     reloadTime: 1.5
+    firePoint: {fileID: 0}
+    muzzleFlash: []
+    hitEffectPrefab: {fileID: 0}
+    weaponAudioSource: {fileID: 0}
+    fireSound: {fileID: 0}
+    hitSound: {fileID: 0}
+    hitEffectDestroyTime: 1.5
   - displayName: Rifle
+    hitType: 0
     weaponObject: {fileID: 181035422}
+    projectilePrefab: {fileID: 0}
+    projectileSpeed: 5
+    projectileExplosionRadius: 0
     damage: 15
     fireDistance: 150
     magazineSize: 10
     currentAmmo: 10
     reserveAmmo: 40
     reloadTime: 1.5
+    firePoint: {fileID: 0}
+    muzzleFlash: []
+    hitEffectPrefab: {fileID: 0}
+    weaponAudioSource: {fileID: 0}
+    fireSound: {fileID: 0}
+    hitSound: {fileID: 0}
+    hitEffectDestroyTime: 1.5
   - displayName: Heavy
+    hitType: 0
     weaponObject: {fileID: 1433234765}
+    projectilePrefab: {fileID: 0}
+    projectileSpeed: 5
+    projectileExplosionRadius: 0
     damage: 30
     fireDistance: 80
     magazineSize: 8
     currentAmmo: 8
     reserveAmmo: 20
     reloadTime: 1.8
+    firePoint: {fileID: 0}
+    muzzleFlash: []
+    hitEffectPrefab: {fileID: 0}
+    weaponAudioSource: {fileID: 0}
+    fireSound: {fileID: 0}
+    hitSound: {fileID: 0}
+    hitEffectDestroyTime: 1.5
   startWeaponIndex: 0
-  firePoint: {fileID: 1279127459}
   playerCamera: {fileID: 330585545}
   debugRayColor: {r: 1, g: 0, b: 0, a: 1}
   debugDuration: 0.2
-  muzzleFlash:
-  - {fileID: 634943702}
-  hitEffectPrefab: {fileID: 5669246471909640947, guid: 2792d061967742b448bd759e8930ce49, type: 3}
-  weaponAudioSource: {fileID: 0}
-  fireSound: {fileID: 0}
-  hitSound: {fileID: 0}
-  hitEffectDestroyTime: 1.5
   ammoText: {fileID: 417618261}
   reloadText: {fileID: 981745113}
   weaponNameText: {fileID: 0}
+  grenadePrefab: {fileID: 0}
+  firePoint: {fileID: 0}
+  grenadeThrowForce: 10
+  grenadeDamage: 500
 --- !u!1 &205037050
 GameObject:
   m_ObjectHideFlags: 0
@@ -1525,11 +1554,6 @@ PrefabInstance:
 --- !u!4 &634943700 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6864860825588444682, guid: 8192eedee12c5694bb926a55063eb6e6, type: 3}
-  m_PrefabInstance: {fileID: 634943699}
-  m_PrefabAsset: {fileID: 0}
---- !u!198 &634943702 stripped
-ParticleSystem:
-  m_CorrespondingSourceObject: {fileID: 3584774378783718644, guid: 8192eedee12c5694bb926a55063eb6e6, type: 3}
   m_PrefabInstance: {fileID: 634943699}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &688643029

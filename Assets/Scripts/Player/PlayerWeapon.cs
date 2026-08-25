@@ -2,17 +2,36 @@ using UnityEngine;
 using TMPro;
 using System;
 
+public enum HitType
+{
+    Raycase,
+    Projectile
+}
+
 [Serializable]
 public class WeaponSlot
 {
     public string displayName = "Pistol";
+    public HitType hitType;
     public GameObject weaponObject;
+    public GameObject projectilePrefab;
+    public float projectileSpeed = 5.0f;
+    public float projectileExplosionRadius = 0.0f;
     public int damage = 10;
     public float fireDistance = 100.0f;
     public int magazineSize = 12;
     public int currentAmmo = 12;
     public int reserveAmmo = 36;
     public float reloadTime = 1.5f;
+
+    public Transform firePoint;
+    public ParticleSystem[] muzzleFlash;
+
+    public GameObject hitEffectPrefab;
+    public AudioSource weaponAudioSource;
+    public AudioClip fireSound;
+    public AudioClip hitSound;
+    public float hitEffectDestroyTime = 1.5f;
 }
 
 public class PlayerWeapon : MonoBehaviour
@@ -20,22 +39,18 @@ public class PlayerWeapon : MonoBehaviour
     [SerializeField] private WeaponSlot[] weaponSlots;
     [SerializeField] private int startWeaponIndex = 0;
 
-    [SerializeField] private Transform firePoint;
-
     [SerializeField] private Camera playerCamera;
     [SerializeField] private Color debugRayColor = Color.red;
-    [SerializeField] private float debugDuration = 0.2f;
-
-    [SerializeField] private ParticleSystem[] muzzleFlash;
-    [SerializeField] private GameObject hitEffectPrefab;
-    [SerializeField] private AudioSource weaponAudioSource;
-    [SerializeField] private AudioClip fireSound;
-    [SerializeField] private AudioClip hitSound;
-    [SerializeField] private float hitEffectDestroyTime = 1.5f;
+    [SerializeField] private float debugDuration = 0.2f;    
 
     [SerializeField] private TMP_Text ammoText;
     [SerializeField] private TMP_Text reloadText;
     [SerializeField] private TMP_Text weaponNameText;
+
+    [SerializeField] private GameObject grenadePrefab;
+    [SerializeField] private Transform firePoint;
+    [SerializeField] private float grenadeThrowForce = 10.0f;
+    [SerializeField] private int grenadeDamage = 500;
 
     private int currentWeaponIndex;
     private bool isReloading;
@@ -62,7 +77,6 @@ public class PlayerWeapon : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        CheckRequiredReferences();
         InitializeWeaponSlot();
         SelectStartWeapon();
     }
@@ -73,6 +87,7 @@ public class PlayerWeapon : MonoBehaviour
         HandleWeaponSwitchInput();
         HandleFireInput();
         HandleReloadInput();
+        HandleThrowGrenadeInput();
         UpdateReload();
     }
 
@@ -104,14 +119,6 @@ public class PlayerWeapon : MonoBehaviour
         UpdateWeaponUI();
     }
 
-    private void CheckRequiredReferences()
-    {
-        if(firePoint == null)
-        {
-            Debug.LogWarning("FirePoint 가 연결되지 않았습니다.", this);
-        }
-    }
-
     void HandleWeaponSwitchInput()
     {
         if(Input.GetKeyDown(KeyCode.Alpha1) == true)
@@ -141,6 +148,27 @@ public class PlayerWeapon : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.R))
         {
             TryBeginReload();
+        }
+    }
+
+    void HandleThrowGrenadeInput()
+    {
+        if(Input.GetKeyDown(KeyCode.G) == true)
+        {
+            // 수류탄 투척.
+            ThrowGrenadeWeapon();
+        }
+    }
+
+    void ThrowGrenadeWeapon()
+    {
+        GameObject grenadeObject = Instantiate(grenadePrefab, firePoint.position, Quaternion.identity);
+
+        Grenade grenade = grenadeObject.GetComponent<Grenade>();
+        if (grenade != null)
+        {
+            Vector3 throwDirection = playerCamera.transform.forward + Vector3.up * 0.25f;
+            grenade.Throw(throwDirection.normalized, grenadeThrowForce, grenadeDamage);
         }
     }
 
@@ -202,6 +230,12 @@ public class PlayerWeapon : MonoBehaviour
 
         PlayFireFeedback();
 
+        if(weapon.hitType == HitType.Projectile)
+        {
+            FireProjectileWeapon();
+            return;
+        }
+
         Vector3 rayStartPosition = playerCamera.transform.position;
         Vector3 rayDirection = playerCamera.transform.forward;
 
@@ -232,11 +266,37 @@ public class PlayerWeapon : MonoBehaviour
         }
     }
 
+    void FireProjectileWeapon()
+    {
+        WeaponSlot weapon = CurrentWeapon;
+        if (weapon == null || weapon.projectilePrefab == null)
+        {
+            return;
+        }
+
+        GameObject projectileObject = Instantiate(weapon.projectilePrefab, weapon.firePoint.position, Quaternion.identity);
+
+        if(projectileObject != null)
+        {
+            Projectile projectile = projectileObject.GetComponent<Projectile>();
+            if(projectile != null)
+            {
+                projectile.Launch(playerCamera.transform.forward, weapon.projectileSpeed, weapon.damage, weapon.projectileExplosionRadius);
+            }
+        }
+    }
+
     void PlayFireFeedback()
     {
-        if(muzzleFlash != null)
+        WeaponSlot weapon = CurrentWeapon;
+        if(weapon == null)
         {
-            foreach (ParticleSystem particle in muzzleFlash)
+            return;
+        }
+
+        if(weapon.muzzleFlash != null)
+        {
+            foreach (ParticleSystem particle in weapon.muzzleFlash)
             {
                 if(particle != null)
                 {
@@ -245,24 +305,30 @@ public class PlayerWeapon : MonoBehaviour
             }
         }
 
-        if (weaponAudioSource != null && fireSound != null)
+        if (weapon.weaponAudioSource != null && weapon.fireSound != null)
         {
-            weaponAudioSource.PlayOneShot(fireSound);
+            weapon.weaponAudioSource.PlayOneShot(weapon.fireSound);
         }
     }
 
     void PlayHitFeedback(RaycastHit hitInfo)
     {
-        if(hitEffectPrefab != null)
+        WeaponSlot weapon = CurrentWeapon;
+        if (weapon == null)
         {
-            GameObject hitEffect = Instantiate(hitEffectPrefab, hitInfo.point, Quaternion.identity);
-
-            Destroy(hitEffect, hitEffectDestroyTime);
+            return;
         }
 
-        if (weaponAudioSource != null && hitSound != null)
+        if (weapon.hitEffectPrefab != null)
         {
-            weaponAudioSource.PlayOneShot(hitSound);
+            GameObject hitEffect = Instantiate(weapon.hitEffectPrefab, hitInfo.point, Quaternion.identity);
+
+            Destroy(hitEffect, weapon.hitEffectDestroyTime);
+        }
+
+        if (weapon.weaponAudioSource != null && weapon.hitSound != null)
+        {
+            weapon.weaponAudioSource.PlayOneShot(weapon.hitSound);
         }
     }
 
