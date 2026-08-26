@@ -530,7 +530,7 @@ MonoBehaviour:
   weaponNameText: {fileID: 0}
   grenadePrefab: {fileID: 1442685487587878791, guid: a7563c390d4137a41bf3b8843120a289, type: 3}
   firePoint: {fileID: 393189816}
-  grenadeThrowForce: 3
+  grenadeThrowForce: 1
   grenadeDamage: 500
 --- !u!1 &205037050
 GameObject:
