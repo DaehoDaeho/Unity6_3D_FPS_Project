@@ -36,15 +36,24 @@ public class Grenade : MonoBehaviour
         Collider[] colliders = Physics.OverlapSphere(center, explosionRadius);
         foreach(Collider hitCollider in colliders)
         {
-            EnemyHealth enemyHealth = hitCollider.GetComponent<EnemyHealth>();
-            if(enemyHealth != null)
+            EnemyHitbox hitBox = hitCollider.GetComponent<EnemyHitbox>();
+            if(hitBox != null)
             {
-                enemyHealth.TakeDamage(damage);
+                hitBox.TakeHit(damage);
             }
-
-            Rigidbody hitRigidbody = hitCollider.GetComponent<Rigidbody>();
-            if(hitRigidbody != null && hitRigidbody.isKinematic == false)
+            else
             {
+                EnemyHealth enemyHealth = hitCollider.GetComponentInParent<EnemyHealth>();
+                if (enemyHealth != null)
+                {
+                    enemyHealth.TakeDamage(damage);
+                }
+            }   
+
+            Rigidbody hitRigidbody = hitCollider.GetComponentInParent<Rigidbody>();
+            if(hitRigidbody != null)
+            {
+                hitRigidbody.isKinematic = false;
                 hitRigidbody.AddExplosionForce(explosionForce, center, explosionRadius, 0.5f, ForceMode.Impulse);
             }
         }

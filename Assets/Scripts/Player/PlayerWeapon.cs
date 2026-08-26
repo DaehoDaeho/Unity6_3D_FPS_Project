@@ -4,7 +4,7 @@ using System;
 
 public enum HitType
 {
-    Raycase,
+    Raycast,
     Projectile
 }
 
@@ -133,6 +133,10 @@ public class PlayerWeapon : MonoBehaviour
         {
             TrySwitchWeapon(2);
         }
+        else if (Input.GetKeyDown(KeyCode.Alpha4) == true)
+        {
+            TrySwitchWeapon(3);
+        }
     }
 
     void HandleFireInput()
@@ -249,6 +253,13 @@ public class PlayerWeapon : MonoBehaviour
             Debug.Log("Hit Point: " + hitInfo.point);
 
             PlayHitFeedback(hitInfo);
+
+            EnemyHitbox enemyHitbox = hitInfo.collider.GetComponent<EnemyHitbox>();
+            if(enemyHitbox != null)
+            {
+                enemyHitbox.TakeHit(weapon.damage);
+                return;
+            }    
 
             EnemyHealth enemyHealth = hitInfo.collider.GetComponent<EnemyHealth>();
             if(enemyHealth != null)
