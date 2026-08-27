@@ -4,6 +4,7 @@ public class EnemyHealth : MonoBehaviour
 {
     [SerializeField] private int maxHealth = 100;
     [SerializeField] private EnemyChaseAgent agent;
+    [SerializeField] private RangedEnemy rangedEnemy;
 
     private int currentHealth = 0;
     private bool isDead;
@@ -56,6 +57,11 @@ public class EnemyHealth : MonoBehaviour
         if(agent != null)
         {
             agent.ChangeState(EnemyChaseAgent.EnemyState.Dead);
+        }
+
+        if(rangedEnemy != null)
+        {
+            rangedEnemy.PlayDeadAnimation();
         }
 
         //gameObject.SetActive(false);

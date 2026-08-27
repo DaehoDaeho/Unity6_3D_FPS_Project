@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &176052555356103393
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4997836819951596817}
+  m_Layer: 0
+  m_Name: FirePoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4997836819951596817
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 176052555356103393}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.2, z: 0.4}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3897048419207613390}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &3575754332183948325
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -62,7 +93,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 2045b8a278181064a8dfb7919bc2dd2f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4997836819951596817}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 2045b8a278181064a8dfb7919bc2dd2f, type: 3}
       insertIndex: -1
@@ -75,7 +109,7 @@ PrefabInstance:
       addedObject: {fileID: 7374111487518429290}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 2045b8a278181064a8dfb7919bc2dd2f, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 6133769227668842667}
+      addedObject: {fileID: 7637398044170978911}
     - targetCorrespondingSourceObject: {fileID: -2084811680363313996, guid: 2045b8a278181064a8dfb7919bc2dd2f, type: 3}
       insertIndex: -1
       addedObject: {fileID: 6246576526785323810}
@@ -83,6 +117,11 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 1709859501399851547}
   m_SourcePrefab: {fileID: 100100000, guid: 2045b8a278181064a8dfb7919bc2dd2f, type: 3}
+--- !u!4 &3897048419207613390 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 2045b8a278181064a8dfb7919bc2dd2f, type: 3}
+  m_PrefabInstance: {fileID: 3575754332183948325}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &4422192127126950260 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 2045b8a278181064a8dfb7919bc2dd2f, type: 3}
@@ -124,7 +163,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 100
-  agent: {fileID: 6133769227668842667}
+  agent: {fileID: 0}
+  rangedEnemy: {fileID: 7637398044170978911}
 --- !u!195 &7374111487518429290
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -147,7 +187,7 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &6133769227668842667
+--- !u!114 &7637398044170978911
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -156,20 +196,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 4422192127126950260}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 61781b1af4826814799eef629f787728, type: 3}
+  m_Script: {fileID: 11500000, guid: 906c39f681e559943948fbe694338b10, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 0}
-  targetHealth: {fileID: 0}
-  chaseDistance: 12
-  stopDistance: 2.2
-  updateInterval: 0.15
   agent: {fileID: 7374111487518429290}
+  player: {fileID: 0}
+  playerHealth: {fileID: 0}
+  firePoint: {fileID: 4997836819951596817}
   animator: {fileID: 6986547809074008500}
-  attackDistance: 2.4
-  attackDamage: 10
-  attackCooldown: 1.2
-  attackHitCollider: {fileID: 6246576526785323810}
+  detectRange: 18
+  attackRange: 12
+  stopRange: 7
+  fireInterval: 2.5
+  damage: 8
 --- !u!1 &5948942073993324689 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -2084811680363313996, guid: 2045b8a278181064a8dfb7919bc2dd2f, type: 3}
@@ -208,7 +247,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dcc5c6ff1e19fd84fa8fc2ac07ab1ab5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  agent: {fileID: 6133769227668842667}
+  agent: {fileID: 0}
 --- !u!95 &6986547809074008500 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 5866666021909216657, guid: 2045b8a278181064a8dfb7919bc2dd2f, type: 3}

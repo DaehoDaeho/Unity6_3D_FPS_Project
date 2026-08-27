@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 public class EnemyWaveSpawner : MonoBehaviour
 {
-    [SerializeField] private GameObject enemyPrefab;
+    [SerializeField] private GameObject[] enemyPrefabs;
     [SerializeField] private Transform[] spawnPoints;
     [SerializeField] private Transform playerTarget;
     [SerializeField] private PlayerHealth playerHealth;
@@ -86,14 +86,16 @@ public class EnemyWaveSpawner : MonoBehaviour
 
     void SpawnEnemy()
     {
-        if(enemyPrefab == null || spawnPoints == null || spawnPoints.Length == 0)
+        if(enemyPrefabs == null || spawnPoints == null || spawnPoints.Length == 0)
         {
             return;
         }
 
         Transform spawnPoint = spawnPoints[spawnedInWave % spawnPoints.Length];
 
-        GameObject enemyInstance = Instantiate(enemyPrefab, spawnPoint.position, spawnPoint.rotation);
+        int randomIndex = Random.Range(0, enemyPrefabs.Length);
+
+        GameObject enemyInstance = Instantiate(enemyPrefabs[randomIndex], spawnPoint.position, spawnPoint.rotation);
 
         if(enemyInstance != null)
         {
@@ -102,6 +104,14 @@ public class EnemyWaveSpawner : MonoBehaviour
             if(chaseAgent != null)
             {
                 chaseAgent.SetTarget(playerTarget, playerHealth);
+            }
+            else
+            {
+                RangedEnemy rangedEnemy = enemyInstance.GetComponent<RangedEnemy>();
+                if(rangedEnemy != null)
+                {
+                    rangedEnemy.SetTarget(playerTarget, playerHealth);
+                }
             }
 
             spawnedEnemies.Add(enemyInstance);

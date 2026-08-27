@@ -1787,7 +1787,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 786517b406a4bb349aeb51c9c66786e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 100
+  maxHealth: 10000
   healthText: {fileID: 1516719934}
   gameOverPanel: {fileID: 1396814088}
   testDamageKey: 104
@@ -2790,7 +2790,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemDataSO: {fileID: 11400000, guid: c81f93316bd3b2840bf61e917570370d, type: 2}
   playerHealth: {fileID: 688643033}
-  playerWeapon: {fileID: 0}
+  playerWeapon: {fileID: 202840781}
 --- !u!4 &1036545032
 Transform:
   m_ObjectHideFlags: 0
@@ -4709,7 +4709,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81f4ac86aa5fac44791842b25a49fc00, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyPrefab: {fileID: 4416926081852918481, guid: e078bec3ae9cae04397bee3e8090e212, type: 3}
+  enemyPrefabs:
+  - {fileID: 4416926081852918481, guid: e078bec3ae9cae04397bee3e8090e212, type: 3}
+  - {fileID: 4422192127126950260, guid: 286ed319320b60e498a36d505fff1be0, type: 3}
   spawnPoints:
   - {fileID: 2049863244}
   - {fileID: 1431006143}
