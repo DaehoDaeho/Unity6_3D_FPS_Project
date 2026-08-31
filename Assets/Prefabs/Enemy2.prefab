@@ -31,6 +31,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 3897048419207613390}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &373858489854310977
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8346896749025513537}
+  m_Layer: 0
+  m_Name: EyePoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8346896749025513537
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 373858489854310977}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.6, z: 0.15}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3897048419207613390}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &3575754332183948325
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -97,6 +128,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 2045b8a278181064a8dfb7919bc2dd2f, type: 3}
       insertIndex: -1
       addedObject: {fileID: 4997836819951596817}
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 2045b8a278181064a8dfb7919bc2dd2f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8346896749025513537}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 2045b8a278181064a8dfb7919bc2dd2f, type: 3}
       insertIndex: -1
@@ -110,6 +144,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 2045b8a278181064a8dfb7919bc2dd2f, type: 3}
       insertIndex: -1
       addedObject: {fileID: 7637398044170978911}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 2045b8a278181064a8dfb7919bc2dd2f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3355512588564017213}
     - targetCorrespondingSourceObject: {fileID: -2084811680363313996, guid: 2045b8a278181064a8dfb7919bc2dd2f, type: 3}
       insertIndex: -1
       addedObject: {fileID: 6246576526785323810}
@@ -209,6 +246,25 @@ MonoBehaviour:
   stopRange: 7
   fireInterval: 2.5
   damage: 8
+  perception: {fileID: 3355512588564017213}
+--- !u!114 &3355512588564017213
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4422192127126950260}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2ff4ed80f10b11846bfc32863b408637, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  detectRange: 18
+  viewAngle: 90
+  obstacleLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  eyePoint: {fileID: 8346896749025513537}
 --- !u!1 &5948942073993324689 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -2084811680363313996, guid: 2045b8a278181064a8dfb7919bc2dd2f, type: 3}

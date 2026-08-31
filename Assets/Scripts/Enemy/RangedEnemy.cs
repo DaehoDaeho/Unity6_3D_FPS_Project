@@ -18,6 +18,8 @@ public class RangedEnemy : MonoBehaviour
     [SerializeField] private float fireInterval = 1.2f;
     [SerializeField] private int damage = 8;
 
+    [SerializeField] private EnemyPerception perception;
+
     private float fireTimer;
 
     private bool isDead;
@@ -27,6 +29,11 @@ public class RangedEnemy : MonoBehaviour
     {
         player = newTarget;
         playerHealth = newTargetHealth;
+
+        if(perception != null)
+        {
+            perception.SetTarget(player);
+        }
     }
 
     private void Reset()
@@ -62,16 +69,25 @@ public class RangedEnemy : MonoBehaviour
 
     void UpdateEnemyAction()
     {
-        float distance = Vector3.Distance(transform.position, player.position);
-
-        if(distance > detectRange)
+        bool canSeePlayer = perception.CanSeePlayer();
+        if (canSeePlayer == false)
         {
             isAttacking = false;
             // 행동 중단.
             StopMoving();
             return;
         }
-        else if(distance > attackRange)
+        
+        float distance = Vector3.Distance(transform.position, player.position);
+
+        //if(distance > detectRange)
+        //{
+        //    isAttacking = false;
+        //    // 행동 중단.
+        //    StopMoving();
+        //    return;
+        //}
+        if(distance > attackRange)
         {
             isAttacking = false;
             // 플레이어 추적.

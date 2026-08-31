@@ -27,6 +27,8 @@ public class EnemyChaseAgent : MonoBehaviour
 
     [SerializeField] private Collider attackHitCollider;
 
+    [SerializeField] private EnemyPerception perception;
+
     private float updateTimer;
     private bool isStopped = true;
     private float lastAttackTime = 0.0f;
@@ -65,17 +67,25 @@ public class EnemyChaseAgent : MonoBehaviour
             return;
         }
 
+        bool canSeePlayer = perception.CanSeePlayer();
+        if(canSeePlayer == false)
+        {
+            ChangeState(EnemyState.Idle);
+            RunCurrentState();
+            return;
+        }
+
         updateTimer -= Time.deltaTime;
         if(updateTimer <= 0.0f)
         {
             updateTimer = updateInterval;
+
             float distanceToTarget = Vector3.Distance(transform.position, target.position);
 
             DecideState(distanceToTarget);
         }
 
-        RunCurrentState();        
-        UpdateAnimation();
+        RunCurrentState();
     }
 
     void DecideState(float distanceToTarget)
@@ -137,6 +147,8 @@ public class EnemyChaseAgent : MonoBehaviour
                 }
                 break;
         }
+
+        UpdateAnimation();
     }
 
     void RunIdleState()
@@ -272,6 +284,11 @@ public class EnemyChaseAgent : MonoBehaviour
     {
         target = newTarget;
         targetHealth = newTargetHealth;
+
+        if(perception != null)
+        {
+            perception.SetTarget(target);
+        }
     }
 
     public void OnFootstep()
