@@ -5,6 +5,8 @@ public class EnemyHealth : MonoBehaviour
     [SerializeField] private int maxHealth = 100;
     [SerializeField] private EnemyChaseAgent agent;
     [SerializeField] private RangedEnemy rangedEnemy;
+    [SerializeField] private RagdollDeathController ragdollController;
+    [SerializeField] private bool useRagdoll = true;
 
     private int currentHealth = 0;
     private bool isDead;
@@ -54,14 +56,21 @@ public class EnemyHealth : MonoBehaviour
 
         Debug.Log("사망했씁니다.");
 
-        if(agent != null)
+        if(useRagdoll == true && ragdollController != null)
         {
-            agent.ChangeState(EnemyChaseAgent.EnemyState.Dead);
+            ragdollController.Die();
         }
-
-        if(rangedEnemy != null)
+        else
         {
-            rangedEnemy.PlayDeadAnimation();
+            if (agent != null)
+            {
+                agent.ChangeState(EnemyChaseAgent.EnemyState.Dead);
+            }
+
+            if (rangedEnemy != null)
+            {
+                rangedEnemy.PlayDeadAnimation();
+            }
         }
 
         //gameObject.SetActive(false);
